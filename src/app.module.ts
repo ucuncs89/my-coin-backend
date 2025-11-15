@@ -6,9 +6,10 @@ import { DatabaseModule } from './database/database.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { SocketModule } from './modules/socket/socket.module';
 
 @Module({
-  imports: [DatabaseModule, WalletModule, AuthModule],
+  imports: [DatabaseModule, WalletModule, AuthModule, SocketModule],
   controllers: [AppController],
   providers: [
     AppService,
