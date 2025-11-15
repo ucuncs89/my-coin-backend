@@ -17,7 +17,8 @@ export class ResponseInterceptor implements NestInterceptor {
       map((data) => ({
         status_code: res.statusCode || 200,
         success: true,
-        ...data,
+        message: data.message || 'Success',
+        result: data.result || null,
       })),
     );
   }
