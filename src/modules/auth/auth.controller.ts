@@ -1,9 +1,15 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Post, Body, Get } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Public } from './decorators/public.decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -33,6 +39,29 @@ export class AuthController {
     return {
       message: 'User successfully logged in',
       result: user,
+    };
+  }
+
+  @Get('test-guard')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Test JWT guard - requires authentication' })
+  @ApiResponse({
+    status: 200,
+    description: 'Guard test successful - user is authenticated',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - invalid or missing token',
+  })
+  async testGuard(@CurrentUser() user: any) {
+    return {
+      message: 'Guard test successful',
+      result: {
+        authenticated: true,
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
     };
   }
 }
