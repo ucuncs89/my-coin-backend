@@ -43,7 +43,7 @@ export class AuthController {
   }
 
   @Get('test-guard')
-  @ApiBearerAuth()
+  // @ApiBearerAuth()
   @ApiOperation({ summary: 'Test JWT guard - requires authentication' })
   @ApiResponse({
     status: 200,
@@ -58,6 +58,7 @@ export class AuthController {
       message: 'Guard test successful',
       result: {
         authenticated: true,
+
         id: user.id,
         email: user.email,
         name: user.name,

@@ -1,6 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { WalletService } from './wallet.service';
+import { CreateWalletDto } from './dto/create-wallet.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
@@ -11,7 +14,16 @@ export class WalletController {
     return {
       success: true,
       message: 'Wallets fetched successfully',
-      data: wallets,
+      result: wallets,
+    };
+  }
+
+  @Post('create')
+  async create(@Body() createWalletDto: CreateWalletDto) {
+    const wallet = await this.walletService.create(createWalletDto);
+    return {
+      message: 'Wallet created successfully',
+      result: wallet,
     };
   }
 }
