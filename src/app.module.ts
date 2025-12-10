@@ -7,9 +7,10 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { SocketModule } from './modules/socket/socket.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
-  imports: [DatabaseModule, WalletModule, AuthModule, SocketModule],
+  imports: [DatabaseModule, WalletModule, AuthModule, SocketModule, DashboardModule],
   controllers: [AppController],
   providers: [
     AppService,

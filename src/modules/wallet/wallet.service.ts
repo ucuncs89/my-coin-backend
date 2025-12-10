@@ -8,10 +8,6 @@ export class WalletService {
   constructor(private readonly knexService: KnexService) {}
 
   async create(createWalletDto: CreateWalletDto) {
-    const dataWalletPumpFun = await new PumpFunService(
-      process.env.PUMPFUN_BASE_URL as string,
-      '',
-    ).get('api/create-wallet');
     const findWallet = await this.knexService
       .client('wallet')
       .where({
@@ -23,6 +19,10 @@ export class WalletService {
         'Wallet name already exists, please use a different name',
       );
     }
+    const dataWalletPumpFun = await new PumpFunService(
+      process.env.PUMPFUN_BASE_URL as string,
+      '',
+    ).get('api/create-wallet');
     await this.knexService.client('wallet').insert({
       name: createWalletDto.name,
       api_key: dataWalletPumpFun.apiKey,
