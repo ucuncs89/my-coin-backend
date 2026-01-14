@@ -1,11 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateWalletDto } from './dto/create-wallet.dto';
 import { UpdateWalletDto } from './dto/update-wallet.dto';
+import { GetBalanceSolanaDto } from './dto/get-balance-solana.dto';
 import { KnexService } from '../../database/knex.service';
 import { PumpFunService } from '../../pumpfun/pumpfun.service';
+import { SolanaService } from '../solana/solana.service';
 @Injectable()
 export class WalletService {
-  constructor(private readonly knexService: KnexService) {}
+  constructor(
+    private readonly knexService: KnexService,
+    private readonly solanaService: SolanaService,
+  ) {}
 
   async create(createWalletDto: CreateWalletDto) {
     const findWallet = await this.knexService
@@ -58,8 +63,15 @@ export class WalletService {
     return wallets;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} wallet`;
+  async findOne(id: number) {
+    const wallet = await this.knexService
+      .client('wallet')
+      .where({ id })
+      .first();
+    if (!wallet) {
+      throw new BadRequestException('Wallet not found');
+    }
+    return wallet;
   }
 
   update(id: number, updateWalletDto: UpdateWalletDto) {
@@ -68,5 +80,11 @@ export class WalletService {
 
   remove(id: number) {
     return `This action removes a #${id} wallet`;
+  }
+
+  async getBalanceSolana(
+    getBalanceSolanaDto: GetBalanceSolanaDto,
+  ): Promise<{ balance: number; wallet_public_key: string }> {
+    return this.solanaService.getBalance(getBalanceSolanaDto);
   }
 }
